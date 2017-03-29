@@ -1,24 +1,21 @@
-<% if !project.errors.empty? %>
-    <div id="error_explanation">
-      <h2> <%= pluralize(project.errors.count,"error") %>
-        prohibited this project from being saved:</h2>
+<% if false %>
 
-      <ul>
-        <% project.errors.full_messages.each do|msg|%>
-            <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
+    <% if !project.errors.empty? %>
+        <div id="error_explanation">
+          <h2> <%= pluralize(project.errors.count, "error") %>
+            prohibited this project from being saved:</h2>
+
+          <ul>
+            <% project.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
 <% end %>
-<%= form_for(project) do |f| %>
-    <p>
-      <%= f.label :name %>
-      <%= f.text_field :name ,required:true%>
-    </p>
+<%= simple_form_for(project) do |f| %>
+    <%= f.input :name %>
+    <%= f.input :description %>
 
-    <p>
-      <%= f.label :description %>
-      <%= f.text_field :description %>
-    </p>
-    <%= f.submit %>
+    <%= f.button :submit, class: "btn-primary" %>
 <% end %>
