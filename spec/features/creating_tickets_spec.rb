@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.feature 'Users can create new tickets' do
 
+  let(:user) {FactoryGirl.create(:user)}
   before do
+    login_as(user)
     project = FactoryGirl.create(:project,name:"Internet Explorer")
 
     visit project_url(project)
@@ -15,8 +17,12 @@ RSpec.feature 'Users can create new tickets' do
     fill_in "Description",with:"My pages are ugly!"
 
     click_button "Create Ticket"
-
+    #expect(user).not_to be_nil
     expect(page).to have_content "Ticket has been created."
+    within("#ticket") do
+      expect(page).to have_content "Auther: #{user.email}"
+
+    end
   end
 
 

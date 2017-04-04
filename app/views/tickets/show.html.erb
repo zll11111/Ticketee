@@ -4,12 +4,23 @@
   </header>
   <header>
     <h2><%= @ticket.name %></h2>
-    <ul class="action">
+    <ul class="actions">
       <li><%= link_to "Edit Ticket" ,[:edit,@project,@ticket] ,class:"edit"%></li>
       <li><%= link_to "Delete Ticket",[@project,@ticket],method: :delete,
                       data:{confirm:"Are you sure you want to delete this ticket?"},class:"delete"%></li>
     </ul>
   </header>
+  <table id="attributes">
+    <tr>
+      <th>Auther:</th>
+      <td><%= @ticket.auther.email %></td>
+
+    </tr>
+    <tr>
+      <th>Created:</th>
+      <td><%= time_ago_in_words(@ticket.created_at) %></td>
+    </tr>
+  </table>
   <%= simple_format(@ticket.description) %>
 
 
