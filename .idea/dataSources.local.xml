@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Rails ticketee: production" uuid="a3598f48-eeab-46ca-a83c-88616110c4d5" />
+    <data-source name="Rails ticketee: development" uuid="3f7187eb-b11f-4ec0-8dea-450e64aff9c8">
+      <auth-required>false</auth-required>
+    </data-source>
+    <data-source name="Rails ticketee: test" uuid="b9bc7a6a-9a65-4a2b-ab69-8df4efd6602f" />
+  </component>
+</project>

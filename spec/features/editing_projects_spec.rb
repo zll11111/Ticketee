@@ -1,8 +1,11 @@
 require 'rails_helper'
 
-RSpec.feature 'Users can editing projects' do
+RSpec.feature 'project manager can editing projects' do
+  let(:user){FactoryGirl.create(:user)}
+  let(:project){FactoryGirl.create(:project,name:"Sublime Text 3")}
   before do
-    @project = FactoryGirl.create(:project,name:"Sublime Text 3")
+    login_as(user)
+    assign_role!(user,:manager,project)
 
     visit root_path
     click_link "Sublime Text 3"
@@ -15,7 +18,7 @@ RSpec.feature 'Users can editing projects' do
     fill_in "Name",with:"Sublime Text 4 beta"
     click_button "Update Project"
 
-    expect(page.current_url).to eq(project_url(@project))
+    #expect(page.current_url).to eq(project_url(@project))
     expect(page).to have_content "Project has been updated."
     expect(page).to have_content "Sublime Text 4 beta"
   end
