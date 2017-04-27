@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ProjectPolicy do
+RSpec.describe ProjectPolicy do
 
   let(:user) { User.new }
 
@@ -34,11 +34,13 @@ describe ProjectPolicy do
   #   pending "add some examples to (or delete) #{__FILE__}"
   # end
 
+=begin
   permissions :show? do
     let(:user){FactoryGirl.create :user}
     let(:project){FactoryGirl.create :project}
 
     it "block anonymous users" do
+      # puts subject.new(user,project).show?
       expect(subject).not_to permit(nil,project)
     end
 
@@ -107,6 +109,60 @@ describe ProjectPolicy do
       expect(subject).not_to permit(user,project)
     end
   end
+=end
+
+  context "permissions" do
+    subject{ProjectPolicy.new(user,project)}
+
+    let(:user){FactoryGirl.create(:user)}
+    let(:project){FactoryGirl.create(:project)}
+
+    context "for anonyous users" do
+      let(:user){nil}
+
+      it{should_not permit_action :show}
+      it{should_not permit_action :update}
+      #it{should_not permit_action :destroy}
+    end
+
+    context "for viewers of the project" do
+      before {assign_role!(user,:viewer,project)}
+
+      it{should permit_action :show}
+      it{should_not permit_action :update}
+      #it{should_not permit_action :destroy}
+    end
+
+    context "for editors of the project" do
+      before {assign_role!(user,:editor,project)}
+
+      it{should permit_action :show}
+      it{should_not permit_action :update}
+      #it{should_not permit_action :destroy}
+    end
+
+    context "for managers of the project" do
+      before { assign_role!(user, :manager, project) }
+      it { should permit_action :show }
+      it { should permit_action :update }
+      ##it{should permit_action :destroy}
+    end
+    context "for managers of other projects" do
+      before do
+        assign_role!(user, :manager, FactoryGirl.create(:project))
+      end
+      it { should_not permit_action :show }
+      it { should_not permit_action :update }
+      #it{should_not permit_action :destroy}
+    end
+    context "for administrators" do
+      let(:user) { FactoryGirl.create :user, :admin }
+      it { should permit_action :show }
+      it { should permit_action :update }
+      #it{should permit_action :destroy}
+    end
+  end
+
   #
   # permissions :destroy? do
   #   pending "add some examples to (or delete) #{__FILE__}"

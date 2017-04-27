@@ -20,3 +20,7 @@ end
     )
   end
 end
+
+unless Role.exists?(user:User.find_by_email("viewer@ticketee.com"),role:"viewer",project:Project.find_by_name("Sublime Text 3"))
+  Role.create!(user:User.find_by_email("viewer@ticketee.com"),role:"viewer",project:Project.find_by_name("Sublime Text 3"))
+end

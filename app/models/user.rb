@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   scope :excluding_archived,lambda{where(archived_at:nil)}
+  has_many :roles
   def to_s
     #"#{email}(#{admin??"Admin":"User"})"
     "#{email} (#{admin ? "Admin":"User"})"
@@ -19,5 +20,9 @@ class User < ActiveRecord::Base
 
   def inactive_message
     archived_at.nil? ? super: :archived
+  end
+
+  def role_on(project)
+    self.roles.find_by(project_id:project).try(:role)
   end
 end

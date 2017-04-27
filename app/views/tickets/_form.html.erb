@@ -2,4 +2,9 @@
     <%= f.input :name %>
     <%= f.input :description %>
     <%= f.button :submit, class: "btn-primary" %>
+    <h3>Attachments</h3>
+    <%= f.simple_fields_for :attachments do |ff| %>
+        <%= ff.input :file, as: :file, label: "File ##{ff.index + 1}" %>
+        <%= ff.input :file_cache, as: :hidden %>
+    <% end %>
 <% end %>
