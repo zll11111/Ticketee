@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  root 'projects#index'
+  get 'comments/create'
 
   namespace :admin do
     root 'application#index'
@@ -9,6 +11,14 @@ Rails.application.routes.draw do
         patch :archive
       end
     end
+
+    resources :states, only: [:index,:new,:create] do
+      member do
+        get :make_default
+      end
+    end
+
+
   end
 
   devise_for :users
@@ -66,12 +76,15 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  root 'projects#index'
+
 
   resources :projects, only: [:index, :show, :edit, :update] do
     resources :tickets
   end
 
-  resources :attachments,only:[:show]
+  resources :tickets,only: [] do
+    resources :comments,only: [:create]
+  end
+  resources :attachments,only:[:show,:new]
 
 end

@@ -20,6 +20,10 @@ require "pundit/rspec"
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
+# uname="127.0.0.1"
+# Capybara.default_host = "http://#{uname}:3000"
+# Capybara.server_port = 3000 # could be any of your choice
+# Capybara.app_host = "http://#{uname}:#{Capybara.server_port}"
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Checks for pending migrateion and applies them before tests are run.
@@ -33,7 +37,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -56,4 +60,5 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.include Warden::Test::Helpers, type: :feature
   config.after(type: :feature) { Warden.test_reset! }
+  config.include Devise::TestHelpers,type: :controller
 end

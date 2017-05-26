@@ -48,6 +48,8 @@ end
 group :test do
   gem 'capybara', '~>2.4'
   gem 'factory_girl_rails','~>4.5'
+  gem 'selenium-webdriver','~>2.53.1'
+  gem 'database_cleaner','~>1.4'
 end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views

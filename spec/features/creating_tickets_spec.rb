@@ -1,14 +1,18 @@
 require 'rails_helper'
 
 RSpec.feature 'Users can create new tickets' do
-
+  #driver = Selenium::WebDriver.for :chrome
   let(:user) {FactoryGirl.create(:user)}
+  let!(:state) {FactoryGirl.create(:state,name:"New",default:true)}
+
   before do
     login_as(user)
 
     project = FactoryGirl.create(:project,name:"Internet Explorer")
     assign_role!(user,:editor,project)
-    visit project_url(project)
+    #puts(project_path(project))
+    visit project_path(project)
+
     click_link "New Ticket"
   end
 
@@ -19,7 +23,9 @@ RSpec.feature 'Users can create new tickets' do
 
     click_button "Create Ticket"
     #expect(user).not_to be_nil
+    puts page.body
     expect(page).to have_content "Ticket has been created."
+    expect(page).to have_content "State: New"
     within("#ticket") do
       expect(page).to have_content "Auther: #{user.email}"
 
@@ -73,23 +79,51 @@ RSpec.feature 'Users can create new tickets' do
     end
   end
 
-  scenario "with multiple attachments" do
-    fill_in "Name",with:"Add documentation for blink tag"
-    fill_in "Description",with:"The blink tag has a speed attribute"
+  # scenario "with multiple attachments" do
+  #   fill_in "Name",with:"Add documentation for blink tag"
+  #   fill_in "Description",with:"The blink tag has a speed attribute"
+  #
+  #   attach_file "File #1",Rails.root.join("spec/fixtures/speed.txt")
+  #   attach_file "File #2",Rails.root.join("spec/fixtures/spin.txt")
+  #   attach_file "File #3",Rails.root.join("spec/fixtures/gradient.txt")
+  #   click_button "Create Ticket"
+  #
+  #   expect(page).to have_content "Ticket has been created"
+  #
+  #   within("#ticket .attachments") do
+  #     expect(page).to have_content "speed.txt"
+  #     expect(page).to have_content "spin.txt"
+  #
+  #     expect(page).to have_content "gradient.txt"
+  #
+  #   end
+  # end
 
-    attach_file "File #1","spec/fixtures/speed.txt"
-    attach_file "File #2","spec/fixtures/spin.txt"
-    attach_file "File #3","spec/fixtures/gradient.txt"
+  scenario "with multiple attachments with js", js: true do
+    fill_in "Name", with: "Add documentation for blink tag"
+    fill_in "Description", with: "Blink tag's speed attribute"
+    attach_file "File #1", Rails.root.join("spec/fixtures/speed.txt")
+    click_link "Add another file"
+    attach_file "File #2", Rails.root.join("spec/fixtures/spin.txt")
     click_button "Create Ticket"
-
-    expect(page).to have_content "Ticket has been created"
-
+    expect(page).to have_content "Ticket has been created."
     within("#ticket .attachments") do
       expect(page).to have_content "speed.txt"
       expect(page).to have_content "spin.txt"
+    end
+  end
 
-      expect(page).to have_content "gradient.txt"
+  scenario "with associated tags" do
+    fill_in "Name",with:"Non-standards compliance"
+    fill_in "Description",with: "My page are ugly!"
+    fill_in "Tags",with: "browser visual"
 
+    click_button "Create Ticket"
+
+    expect(page).to have_content "Ticket has been created."
+    within("#ticket #tags") do
+      expect(page).to have_content "browser"
+      expect(page).to have_content "visual"
     end
   end
 

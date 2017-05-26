@@ -25,6 +25,21 @@
       <th>Created:</th>
       <td><%= time_ago_in_words(@ticket.created_at) %></td>
     </tr>
+    <% if @ticket.state.present? %>
+        <tr>
+          <th>State:</th>
+          <td><%= render @ticket.state %></td>
+        </tr>
+    <% end %>
+
+    <% if @ticket.tags.any? %>
+
+        <tr id="tags">
+          <th>Tags:</th>
+          <td><%= render @ticket.tags %></td>
+        </tr>
+    <% end %>
+
   </table>
   <%= simple_format(@ticket.description) %>
 
@@ -41,3 +56,17 @@
 
   <% end %>
 </div>
+
+<header>
+  <h3>Comments</h3>
+</header>
+<div id="comments">
+  <% if @ticket.comments.persisted.any? %>
+      <%= render @ticket.comments.persisted %>
+  <% else %>
+      <p>There are no comments for this ticket.</p>
+  <% end %>
+</div>
+<% if policy(@comment).create? %>
+    <%= render "comments/form", ticket: @ticket, comment: @comment %>
+<% end %>

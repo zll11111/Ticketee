@@ -39,4 +39,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  #当传递了没有被permit的参数给了params，会raise exception
+  config.action_controller.action_on_unpermitted_parameters = :raise
 end

@@ -48,6 +48,11 @@ RSpec.feature 'Users can only see the appropriate links' do
       visit project_ticket_path(project,ticket)
       expect(page).not_to have_link "Delete Ticket"
     end
+
+    scenario "cannot see the New Comment link" do
+      visit project_ticket_path(project,ticket)
+      expect(page).not_to have_heading "New conment"
+    end
 =begin
     scenario "cannot see the Delete Project link" do
       visit project_path(project)
@@ -89,6 +94,11 @@ RSpec.feature 'Users can only see the appropriate links' do
     scenario "can see the Delete Ticket link" do
       visit project_ticket_path(project,ticket)
       expect(page).to have_link "Delete Ticket"
+    end
+
+    scenario "can see the New Comment link" do
+      visit project_ticket_path(project,ticket)
+      expect(page).to have_heading "New comment"
     end
   end
 

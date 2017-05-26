@@ -2,10 +2,11 @@ class TicketsController < ApplicationController
 
   before_action :set_project
   before_action :set_ticket ,only:[:show,:destroy,:edit,:update]
+
   def new
     @ticket = @project.tickets.build
     authorize @ticket,:create?
-    3.times{@ticket.attachments.build}
+    @ticket.attachments.build
   end
 
   def create
@@ -24,6 +25,7 @@ class TicketsController < ApplicationController
 
   def show
     authorize @ticket ,:show?
+    @comment = @ticket.comments.build(state_id: @ticket.state_id)
   end
 
   def edit
@@ -55,7 +57,7 @@ class TicketsController < ApplicationController
 
     def ticket_param
       #加上attachments_attributes里的id，可以更新附件，否则会增加附件
-      params.require(:ticket).permit(:name,:description,attachments_attributes: [:file,:file_cache,:id])
+      params.require(:ticket).permit(:name,:description,:tag_names,attachments_attributes: [:file,:file_cache,:id])
     end
 
     def set_ticket
